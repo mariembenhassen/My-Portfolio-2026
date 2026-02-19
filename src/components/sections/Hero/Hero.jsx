@@ -189,12 +189,12 @@ export default function Hero() {
                             <div className={`flex items-center gap-3 text-sm ${currentTheme === 'minimal' ? 'text-gray-600' : 'text-neutral-400'
                                 }`}>
                                 <HiLocationMarker className="text-lg" />
-                                <span>Melbourne, Australia</span>
+                                <span>Tunisia</span>
                             </div>
 
                             <div className="flex items-center gap-4">
                                 <motion.a
-                                    href="https://linkedin.com/in/liuyuelintop"
+                                    href="https://www.linkedin.com/in/mariem-ben-hassen-8bb5ab2a4/"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className={`p-2 rounded-lg transition-all duration-300 ${currentTheme === 'minimal'
@@ -208,7 +208,7 @@ export default function Hero() {
                                 </motion.a>
 
                                 <motion.a
-                                    href="https://github.com/liuyuelintop"
+                                    href="https://github.com/mariembenhassen"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className={`p-2 rounded-lg transition-all duration-300 ${currentTheme === 'minimal'
@@ -220,7 +220,7 @@ export default function Hero() {
                                 >
                                     <FaGithub className="text-xl" />
                                 </motion.a>
-
+                                {/**
                                 <motion.a
                                     href="https://blog.liuyuelin.dev/"
                                     target="_blank"
@@ -233,8 +233,7 @@ export default function Hero() {
                                     whileTap={{ scale: 0.9 }}
                                 >
                                     <FaBlog className="text-xl" />
-                                </motion.a>
-
+                                </motion.a> **/}
 
                             </div>
                         </div>

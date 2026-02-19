@@ -138,13 +138,13 @@ function AppContent() {
               <CertificationsSection />
             </section>
           </ErrorBoundary>
-
+             {/** 
           <ErrorBoundary sectionName="references section">
             <section id="references">
               <ReferenceSection />
             </section>
           </ErrorBoundary>
-
+           **/}
           <ErrorBoundary sectionName="personal branding section">
             <section id="brand">
               <PersonalBranding />

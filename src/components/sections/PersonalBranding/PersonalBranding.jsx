@@ -189,7 +189,7 @@ const AchievementCard = ({ achievement, index, theme }) => (
 const CodeSnippet = ({ theme }) => {
   const [typedText, setTypedText] = useState('');
   const codeText = `const developer = {
-  name: "Yuelin Liu",
+  name: "Mariem Ben Hassen",
   role: "Full Stack Developer",
   passion: "Building amazing things",
   superpower: "Turning coffee into code ☕"

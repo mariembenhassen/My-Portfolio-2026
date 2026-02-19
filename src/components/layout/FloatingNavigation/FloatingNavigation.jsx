@@ -9,9 +9,11 @@ const NAVIGATION_SECTIONS = [
   { id: 'experience', label: 'Experience', icon: '💼' },
   { id: 'skills', label: 'Skills', icon: '📊' },
   { id: 'projects', label: 'Projects', icon: '🚀' },
-  { id: 'blog', label: 'Blog', icon: '📝' },
-  { id: 'references', label: 'References', icon: '⭐' },
-  { id: 'brand', label: 'Brand', icon: '💎' },
+
+  /*{ id: 'blog', label: 'Blog', icon: '📝' },*/
+  /*{ id: 'references', label: 'References', icon: '⭐' },*/
+ /* { id: 'brand', label: 'Brand', icon: '💎' },*/
+ { id: 'certifications', label: 'certifications', icon: '📝' },
   { id: 'github', label: 'GitHub', icon: '🐙' },
   { id: 'contact', label: 'Contact', icon: '📧' },
 ];

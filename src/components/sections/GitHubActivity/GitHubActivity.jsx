@@ -117,7 +117,9 @@ const ActivityCard = ({ activity, index, theme }) => {
 
 const ActivityStats = ({ activities, theme }) => {
   const stats = activities.reduce((acc, activity) => {
-    acc.totalCommits += activity.type === 'PushEvent' ? (activity.payload.commits?.length || 0) : 0;
+    acc.totalCommits += activity.type === 'PushEvent'
+    ? (activity.payload.size || 0)
+    : 0;
     acc.repositories.add(activity.repo.name);
     acc.activityTypes.add(activity.type);
     return acc;
@@ -232,7 +234,7 @@ export default function GitHubActivity() {
       
       // Fetch recent public events from GitHub API
       const response = await fetch(
-        `https://api.github.com/users/${GITHUB_CONFIG.username}/events/public?per_page=${GITHUB_CONFIG.maxActivities}`
+        `https://api.github.com/users/${GITHUB_CONFIG.username}/events/public?per_page=100`
       );
       
       if (!response.ok) {

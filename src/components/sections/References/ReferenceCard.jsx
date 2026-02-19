@@ -1,3 +1,4 @@
+{/** 
 import { FaQuoteLeft } from "react-icons/fa";
 import { FiLinkedin } from "react-icons/fi";
 import QuoteText from "../../ui/common/QuoteText";
@@ -55,3 +56,5 @@ const ReferenceCard = ({ name, title, company, quote, image, linkedIn }) => {
 };
 
 export default ReferenceCard;
+
+**/}

@@ -11,7 +11,7 @@ const SECTION_LINKS = [
     { label: 'Projects', href: '#projects' },
    /** { label: 'Blog', href: '#blog' },**/
    { label: 'Certifications', href: '#certifications'},
-    { label: 'References', href: '#references' },
+      /** { label: 'References', href: '#references' },**/
     { label: 'Brand', href: '#brand' },
     { label: 'GitHub', href: '#github' },
     { label: 'Contact', href: '#contact' },
