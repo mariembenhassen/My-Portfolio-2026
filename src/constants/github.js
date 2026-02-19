@@ -1,6 +1,6 @@
 // GitHub configuration
 export const GITHUB_CONFIG = {
-  username: 'liuyuelintop',
+  username: 'mariembenhassen',
   
   // Repository highlights (will be used for future features)
   featuredRepos: [

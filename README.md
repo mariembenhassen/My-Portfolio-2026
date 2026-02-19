@@ -1,14 +1,14 @@
-# React Portfolio 🚀
+# My Portfolio 🚀
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=flat-square&logo=vercel)](https://liuyuelin.dev)
-[![Stars](https://img.shields.io/github/stars/liuyuelintop/react-portfolio?style=social)](https://github.com/liuyuelintop/react-portfolio/stargazers)
-[![Portfolio Version](https://img.shields.io/badge/Version-Phase%207-success?style=flat-square)](https://github.com/liuyuelintop/react-portfolio)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=flat-square&logo=vercel)]()
+[![Stars](https://img.shields.io/github/stars/liuyuelintop/react-portfolio?style=social)]()
+[![Portfolio Version](https://img.shields.io/badge/Version-Phase%207-success?style=flat-square)]()
 
 ---
 
 An innovative, interactive portfolio crafted with cutting-edge React 18 technology, featuring smooth Framer Motion animations and elegant Tailwind CSS styling. This showcase presents my professional journey through dynamic project galleries, animated skill visualizations, and an intelligent AI career assistant. Built with enterprise-level architecture, accessibility-first design, and optimized performance for an exceptional user experience across all devices.
 
-![Portfolio Screenshot](./src/assets/og-image.png)
+![Portfolio Screenshot]()
 
 ---
 
@@ -26,9 +26,6 @@ An innovative, interactive portfolio crafted with cutting-edge React 18 technolo
 - **Mobile:** Smooth experience with industry-leading optimization
 - **Accessibility:** Perfect 100 scores with WCAG AA compliance
 - **Modern Standards:** Exceeds accessibility and SEO requirements
-
-> [View Desktop Report](https://pagespeed.web.dev/analysis/https-www-liuyuelin-dev/df2ampev8u?form_factor=desktop) | [View Mobile Report](https://pagespeed.web.dev/analysis/https-www-liuyuelin-dev/df2ampev8u?form_factor=mobile)
-
 ---
 
 ## ✨ Key Features
@@ -340,11 +337,11 @@ Comprehensive development documentation is available in the `docs/claude-develop
 
 ## 👨‍💻 Author
 
-**Yuelin Liu** - Full Stack Developer & AI Engineer
+**Mariem Ben hassen** - Full Stack Developer & AI Engineer
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/liuyuelintop)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=flat-square&logo=github)](https://github.com/liuyuelintop)
-[![Blog](https://img.shields.io/badge/Blog-Read-orange?style=flat-square&logo=hashnode)](https://blog.liuyuelin.dev/)
+[![LinkedIn]()
+[![GitHub]()
+[![Blog]()
 
 ---
 

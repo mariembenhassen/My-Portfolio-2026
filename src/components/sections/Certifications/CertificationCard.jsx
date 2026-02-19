@@ -117,7 +117,7 @@ const CertificationCard = ({ cert, index }) => {
               <img
                 src={cert.backgroundImage}
                 alt={`${cert.title} certificate preview`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-contain transition-trans transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />
               {/* Optional subtle gradient overlay on image */}
