@@ -125,12 +125,7 @@ function AppContent() {
               <Projects />
             </section>
           </ErrorBoundary>
-          {/** 
-          <ErrorBoundary sectionName="blog section">
-            <section id="blog">
-              <Blog />
-            </section>
-          </ErrorBoundary> **/}
+
           <ErrorBoundary sectionName="certifications section">
             <section id="certifications">
               <CertificationsSection />

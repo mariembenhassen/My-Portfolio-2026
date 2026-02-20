@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import CertificationCard from "./CertificationCard";  // ← keep your correct path
+import CertificationCard from "./CertificationCard";  
 import { certifications } from "../../../constants/certifications";
 
 const CertificationsSection = () => {
-  console.log("Loaded certifications:", certifications); // keep for debug
+  console.log("Loaded certifications:", certifications); 
 
   return (
     <section id="certifications" className="py-20 bg-background">

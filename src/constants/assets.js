@@ -21,7 +21,6 @@ import melbUniUltimate from "../assets/projects/melbUniUltimate.webp";
 import careerChatbot from "../assets/projects/careerChatbot.webp";
 import projectManagment from "../assets/projects/Dashboard_projectManagment.png";
 import Estate from "../assets/projects/Estate.png";
-//import logo from "../assets/Logo.png";
 import ChronoLit from  "../assets/projects/chronLit_1.png";
 import Prompet from "../assets/projects/CertifPrompt.png"
 
@@ -52,6 +51,3 @@ export const projectImages = {
   careerChatbot,
 };
 
-export const generalImages = {
-  logo,
-};
