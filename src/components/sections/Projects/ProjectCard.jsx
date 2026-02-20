@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "../../../contexts/ThemeContext";
-import OptimizedImage from "../../ui/common/OptimizedImage";
+//import OptimizedImage from "../../ui/common/OptimizedImage";
 import { getThemeFocusRing } from "../../../utils/accessibility";
 
 // Clean animation variants without conflicts
@@ -126,7 +126,7 @@ const ProjectCard = ({ project, onReadMore }) => {
                          style={{ minHeight: "420px" }}>
                         
                         {/* Project Image */}
-                        <OptimizedImage
+                        <img
                             src={project.image}
                             alt={project.title}
                             className="rounded-lg mb-4"
@@ -175,7 +175,7 @@ const ProjectCard = ({ project, onReadMore }) => {
                             >
                                 View Details
                             </button>
-                            
+                            console.log("Project image src:", project.image);
                             <a
                                 href={project.url}
                                 target="_blank"
