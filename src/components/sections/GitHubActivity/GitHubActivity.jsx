@@ -5,29 +5,32 @@ import { GITHUB_CONFIG } from '../../../constants/github';
 import SectionHeading from '../../ui/common/SectionHeading';
 
 const ACTIVITY_TYPES = {
-  'PushEvent': { icon: '📤', label: 'Pushed code', color: 'text-green-400' },
-  'CreateEvent': { icon: '✨', label: 'Created', color: 'text-blue-400' },
-  'IssuesEvent': { icon: '🐛', label: 'Issue activity', color: 'text-orange-400' },
-  'PullRequestEvent': { icon: '🔄', label: 'Pull request', color: 'text-purple-400' },
-  'ForkEvent': { icon: '🍴', label: 'Forked', color: 'text-cyan-400' },
-  'WatchEvent': { icon: '⭐', label: 'Starred', color: 'text-yellow-400' },
-  'DeleteEvent': { icon: '🗑️', label: 'Deleted', color: 'text-red-400' }
+  PushEvent: { icon: '📤', label: 'Pushed code', color: 'text-green-400' },
+  CreateEvent: { icon: '✨', label: 'Created', color: 'text-blue-400' },
+  IssuesEvent: { icon: '🐛', label: 'Issue activity', color: 'text-orange-400' },
+  PullRequestEvent: { icon: '🔄', label: 'Pull request', color: 'text-purple-400' },
+  ForkEvent: { icon: '🍴', label: 'Forked', color: 'text-cyan-400' },
+  WatchEvent: { icon: '⭐', label: 'Starred', color: 'text-yellow-400' },
+  DeleteEvent: { icon: '🗑️', label: 'Deleted', color: 'text-red-400' },
 };
 
 const ActivityCard = ({ activity, index, theme }) => {
-  const activityType = ACTIVITY_TYPES[activity.type] || { 
-    icon: '📋', 
-    label: 'Activity', 
-    color: 'text-neutral-400' 
+  const activityType = ACTIVITY_TYPES[activity.type] || {
+    icon: '📋',
+    label: 'Activity',
+    color: 'text-neutral-400',
   };
 
   const getActivityDescription = () => {
     const repo = activity.repo.name.split('/')[1];
-    
+
+    if (activity.type === 'PushEvent') {
+      const count = activity.groupedCount || activity.payload.size || 1;
+      const plural = count > 1 ? 's' : '';
+      return `Pushed ${count} commit${plural} to ${repo}`;
+    }
+
     switch (activity.type) {
-      case 'PushEvent':
-        const commitCount = activity.payload.commits?.length || 1;
-        return `Pushed ${commitCount} commit${commitCount > 1 ? 's' : ''} to ${repo}`;
       case 'CreateEvent':
         return `Created ${activity.payload.ref_type} in ${repo}`;
       case 'IssuesEvent':
@@ -48,19 +51,24 @@ const ActivityCard = ({ activity, index, theme }) => {
   const formatTimeAgo = (dateString) => {
     const now = new Date();
     const activityTime = new Date(dateString);
-    const diffInHours = Math.floor((now - activityTime) / (1000 * 60 * 60));
-    
+    const diffMs = now - activityTime;
+    const diffInHours = Math.floor(diffMs / (1000 * 60 * 60));
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 24 * 7) return `${Math.floor(diffInHours / 24)}d ago`;
     return `${Math.floor(diffInHours / (24 * 7))}w ago`;
   };
 
+  const timeDisplay = activity.groupedLatest
+    ? formatTimeAgo(activity.groupedLatest)
+    : formatTimeAgo(activity.created_at);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
+      transition={{ delay: index * 0.08, duration: 0.4 }}
       whileHover={{ scale: 1.02, x: 4 }}
       className={`
         flex items-center gap-3 p-3 rounded-lg cursor-pointer group transition-colors duration-200
@@ -71,14 +79,10 @@ const ActivityCard = ({ activity, index, theme }) => {
       `}
       onClick={() => window.open(`https://github.com/${activity.repo.name}`, '_blank')}
     >
-      {/* Activity Icon */}
-      <div className={`
-        text-2xl transition-transform duration-200 group-hover:scale-110
-      `}>
+      <div className={`text-2xl transition-transform duration-200 group-hover:scale-110`}>
         {activityType.icon}
       </div>
 
-      {/* Activity Details */}
       <div className="flex-1 min-w-0">
         <p className={`text-sm font-medium truncate ${
           theme.currentTheme === 'minimal' ? 'text-gray-800' : 'text-white'
@@ -89,46 +93,85 @@ const ActivityCard = ({ activity, index, theme }) => {
           <span className={`text-xs ${
             theme.currentTheme === 'minimal' ? 'text-gray-500' : 'text-neutral-400'
           }`}>
-            {formatTimeAgo(activity.created_at)}
+            {timeDisplay}
           </span>
-          {activity.payload.commits && activity.payload.commits.length > 0 && (
+
+          {activity.type === 'PushEvent' && activity.payload.commits?.[0]?.message && (
             <span className={`text-xs px-2 py-0.5 rounded-full ${
               theme.currentTheme === 'minimal'
                 ? 'bg-gray-100 text-gray-600'
                 : 'bg-neutral-700 text-neutral-300'
             }`}>
-              +{activity.payload.commits[0].message.split('\n')[0].substring(0, 30)}
-              {activity.payload.commits[0].message.length > 30 ? '...' : ''}
+              +{activity.payload.commits[0].message.split('\n')[0].substring(0, 28)}
+              {activity.payload.commits[0].message.length > 28 ? '…' : ''}
             </span>
           )}
         </div>
       </div>
 
-      {/* Repository Link Indicator */}
-      <div className={`
-        text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200
-        ${theme.currentTheme === 'minimal' ? 'text-gray-400' : 'text-neutral-500'}
-      `}>
+      <div className={`text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
+        theme.currentTheme === 'minimal' ? 'text-gray-400' : 'text-neutral-500'
+      }`}>
         →
       </div>
     </motion.div>
   );
 };
 
+const groupActivities = (activities) => {
+  const grouped = [];
+  let currentGroup = null;
+
+  activities.forEach((act) => {
+    if (act.type !== 'PushEvent') {
+      grouped.push(act);
+      return;
+    }
+
+    const repo = act.repo.name;
+    const commitCount = act.payload.size || 1;
+
+    if (
+      currentGroup &&
+      currentGroup.type === 'PushEvent' &&
+      currentGroup.repo.name === repo
+    ) {
+      currentGroup.groupedCount = (currentGroup.groupedCount || 1) + commitCount;
+      currentGroup.groupedLatest = act.created_at; // most recent time
+      // Keep the original id of the latest push
+      currentGroup.id = act.id;
+    } else {
+      if (currentGroup) grouped.push(currentGroup);
+      currentGroup = {
+        ...act,
+        groupedCount: commitCount,
+        groupedLatest: act.created_at,
+      };
+    }
+  });
+
+  if (currentGroup) grouped.push(currentGroup);
+  return grouped;
+};
+
 const ActivityStats = ({ activities, theme }) => {
-  const stats = activities.reduce((acc, activity) => {
-    acc.totalCommits += activity.type === 'PushEvent'
-    ? (activity.payload.size || 0)
-    : 0;
-    acc.repositories.add(activity.repo.name);
-    acc.activityTypes.add(activity.type);
-    return acc;
-  }, { totalCommits: 0, repositories: new Set(), activityTypes: new Set() });
+  const stats = activities.reduce(
+    (acc, activity) => {
+      acc.totalCommits +=
+        activity.type === 'PushEvent'
+          ? (activity.groupedCount || activity.payload.size || 0)
+          : 0;
+      acc.repositories.add(activity.repo.name);
+      acc.activityTypes.add(activity.type);
+      return acc;
+    },
+    { totalCommits: 0, repositories: new Set(), activityTypes: new Set() }
+  );
 
   const statItems = [
     { label: 'Commits', value: stats.totalCommits, icon: '💻' },
     { label: 'Repos', value: stats.repositories.size, icon: '📂' },
-    { label: 'Activities', value: activities.length, icon: '⚡' }
+    { label: 'Activities', value: activities.length, icon: '⚡' },
   ];
 
   return (
@@ -143,8 +186,7 @@ const ActivityStats = ({ activities, theme }) => {
             text-center p-3 rounded-lg
             ${theme.currentTheme === 'minimal'
               ? 'bg-gray-50 border border-gray-100'
-              : 'bg-neutral-800/50 border border-neutral-700/30'
-            }
+              : 'bg-neutral-800/50 border border-neutral-700/30'}
           `}
         >
           <div className="text-2xl mb-1">{stat.icon}</div>
@@ -166,9 +208,9 @@ const ActivityStats = ({ activities, theme }) => {
 
 const LoadingState = ({ theme }) => (
   <div className="space-y-4">
-    {[...Array(5)].map((_, index) => (
+    {[...Array(5)].map((_, i) => (
       <div
-        key={index}
+        key={i}
         className={`
           flex items-center gap-3 p-3 rounded-lg animate-pulse
           ${theme.currentTheme === 'minimal' ? 'bg-gray-100' : 'bg-neutral-700/30'}
@@ -211,8 +253,7 @@ const ErrorState = ({ onRetry, theme }) => (
         px-4 py-2 rounded-lg text-sm font-medium transition-colors
         ${theme.currentTheme === 'minimal'
           ? 'bg-gray-800 hover:bg-gray-700 text-white'
-          : 'bg-purple-500 hover:bg-purple-400 text-white'
-        }
+          : 'bg-purple-500 hover:bg-purple-400 text-white'}
       `}
     >
       Try Again
@@ -231,47 +272,31 @@ export default function GitHubActivity() {
     try {
       setLoading(true);
       setError(false);
-      
-      // Fetch recent public events from GitHub API
+
       const response = await fetch(
         `https://api.github.com/users/${GITHUB_CONFIG.username}/events/public?per_page=100`
       );
-      
+
       if (!response.ok) {
-        throw new Error('Failed to fetch GitHub activity');
+        throw new Error(`GitHub API error: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
-      // Filter for interesting activity types
-      const filteredActivities = data.filter(activity => 
-        ['PushEvent', 'CreateEvent', 'IssuesEvent', 'PullRequestEvent', 'ForkEvent', 'WatchEvent'].includes(activity.type)
+
+      const filtered = data.filter((activity) =>
+        ['PushEvent', 'CreateEvent', 'IssuesEvent', 'PullRequestEvent', 'ForkEvent', 'WatchEvent'].includes(
+          activity.type
+        )
       );
-      
-      setActivities(filteredActivities);
+
+      setActivities(filtered);
       setLastUpdated(new Date());
-    } catch (error) {
-      console.error('Error fetching GitHub activity:', error);
+    } catch (err) {
+      console.error('GitHub fetch failed:', err);
       setError(true);
-      // Fallback to mock data for demo purposes
-      setActivities([
-        {
-          id: '1',
-          type: 'PushEvent',
-          repo: { name: `${GITHUB_CONFIG.username}/react-portfolio` },
-          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-          payload: {
-            commits: [{ message: 'feat: add GitHub activity integration' }]
-          }
-        },
-        {
-          id: '2',
-          type: 'CreateEvent',
-          repo: { name: `${GITHUB_CONFIG.username}/awesome-project` },
-          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-          payload: { ref_type: 'repository' }
-        }
-      ]);
+
+      // Optional: keep previous activities instead of mock data
+      // or show mock only on first load if preferred
     } finally {
       setLoading(false);
     }
@@ -279,24 +304,22 @@ export default function GitHubActivity() {
 
   useEffect(() => {
     fetchGitHubActivity();
-    
-    // Auto-refresh every configured interval
-    const interval = setInterval(fetchGitHubActivity, GITHUB_CONFIG.refreshInterval);
+    const interval = setInterval(fetchGitHubActivity, GITHUB_CONFIG.refreshInterval || 300000); // 5 min default
     return () => clearInterval(interval);
   }, []);
 
+  const groupedActivities = groupActivities(activities);
+  const displayedActivities = groupedActivities.slice(0, 15); // limit clutter
+
   return (
     <section className="max-w-4xl mx-auto py-16 px-4 lg:px-8">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <SectionHeading level="section">
-          Live from GitHub
-        </SectionHeading>
+        <SectionHeading level="section">Live from GitHub</SectionHeading>
         <p className={`text-lg max-w-2xl mx-auto mb-4 ${
           theme.currentTheme === 'minimal' ? 'text-gray-600' : 'text-neutral-400'
         }`}>
@@ -311,27 +334,23 @@ export default function GitHubActivity() {
         )}
       </motion.div>
 
-      {/* Activity Content */}
       <div className={`
-        rounded-xl p-6 
+        rounded-xl p-6
         ${theme.currentTheme === 'minimal'
           ? 'bg-white border border-gray-200'
-          : 'bg-neutral-800/50 border border-neutral-700/50'
-        }
+          : 'bg-neutral-800/50 border border-neutral-700/50'}
       `}>
         {loading && <LoadingState theme={theme} />}
-        
-        {error && !activities.length && (
-          <ErrorState onRetry={fetchGitHubActivity} theme={theme} />
-        )}
-        
+
+        {error && !activities.length && <ErrorState onRetry={fetchGitHubActivity} theme={theme} />}
+
         {!loading && activities.length > 0 && (
           <>
-            <ActivityStats activities={activities} theme={theme} />
-            
+            <ActivityStats activities={groupedActivities} theme={theme} />
+
             <div className="space-y-2">
               <AnimatePresence>
-                {activities.map((activity, index) => (
+                {displayedActivities.map((activity, index) => (
                   <ActivityCard
                     key={activity.id}
                     activity={activity}
@@ -341,32 +360,32 @@ export default function GitHubActivity() {
                 ))}
               </AnimatePresence>
             </div>
-            
-            {/* View More Link */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="text-center mt-6"
-            >
-              <motion.a
-                href={`https://github.com/${GITHUB_CONFIG.username}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`
-                  inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-colors
-                  ${theme.currentTheme === 'minimal'
-                    ? 'bg-gray-800 hover:bg-gray-700 text-white'
-                    : 'bg-purple-500 hover:bg-purple-400 text-white'
-                  }
-                `}
+
+            {groupedActivities.length > 15 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-center mt-6"
               >
-                <span>View Full GitHub Profile</span>
-                <span>→</span>
-              </motion.a>
-            </motion.div>
+                <motion.a
+                  href={`https://github.com/${GITHUB_CONFIG.username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`
+                    inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-colors
+                    ${theme.currentTheme === 'minimal'
+                      ? 'bg-gray-800 hover:bg-gray-700 text-white'
+                      : 'bg-purple-500 hover:bg-purple-400 text-white'}
+                  `}
+                >
+                  <span>View Full GitHub Profile</span>
+                  <span>→</span>
+                </motion.a>
+              </motion.div>
+            )}
           </>
         )}
       </div>

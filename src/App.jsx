@@ -102,12 +102,13 @@ function AppContent() {
             <Hero />
           </section>
         </ErrorBoundary>
-
+{/*
         <ErrorBoundary sectionName="chatbot section">
           <section id="chatbot">
             <Chatbot />
           </section>
         </ErrorBoundary>
+        **/}
 
         <div className="space-y-8 md:space-y-8">
           <ErrorBoundary sectionName="experience section">
