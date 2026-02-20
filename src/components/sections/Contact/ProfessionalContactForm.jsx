@@ -1,6 +1,11 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../../contexts/ThemeContext';
+import emailjs from '@emailjs/browser';
+
+const EMAILJS_SERVICE_ID = 'service_b1p561k';      
+const EMAILJS_TEMPLATE_ID = 'template_fd7tcz9';    
+const EMAILJS_PUBLIC_KEY = '56pGJgBR69980Io1P';     
 
 // Form configuration
 const CONTACT_TYPES = [
@@ -18,25 +23,14 @@ const URGENCY_LEVELS = [
 ];
 
 const FormField = ({ label, error, children, required = false, theme }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="space-y-2"
-  >
-    <label className={`block text-sm font-medium ${
-      theme.currentTheme === 'minimal' ? 'text-gray-700' : 'text-neutral-300'
-    }`}>
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+    <label className={`block text-sm font-medium ${theme.currentTheme === 'minimal' ? 'text-gray-700' : 'text-neutral-300'}`}>
       {label} {required && <span className="text-red-400">*</span>}
     </label>
     {children}
     <AnimatePresence>
       {error && (
-        <motion.p
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="text-red-400 text-xs"
-        >
+        <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-red-400 text-xs">
           {error}
         </motion.p>
       )}
@@ -85,20 +79,14 @@ const SubmissionSuccess = ({ onReset, theme }) => (
     initial={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: 1, scale: 1 }}
     className={`text-center py-12 px-6 rounded-xl ${
-      theme.currentTheme === 'minimal'
-        ? 'bg-green-50 border border-green-200'
-        : 'bg-green-900/20 border border-green-500/30'
+      theme.currentTheme === 'minimal' ? 'bg-green-50 border border-green-200' : 'bg-green-900/20 border border-green-500/30'
     }`}
   >
     <div className="text-6xl mb-4">✅</div>
-    <h3 className={`text-xl font-bold mb-2 ${
-      theme.currentTheme === 'minimal' ? 'text-green-800' : 'text-green-400'
-    }`}>
+    <h3 className={`text-xl font-bold mb-2 ${theme.currentTheme === 'minimal' ? 'text-green-800' : 'text-green-400'}`}>
       Message Sent Successfully!
     </h3>
-    <p className={`mb-6 ${
-      theme.currentTheme === 'minimal' ? 'text-green-700' : 'text-green-300'
-    }`}>
+    <p className={`mb-6 ${theme.currentTheme === 'minimal' ? 'text-green-700' : 'text-green-300'}`}>
       Thank you for reaching out! I'll get back to you within 24 hours.
     </p>
     <motion.button
@@ -107,10 +95,7 @@ const SubmissionSuccess = ({ onReset, theme }) => (
       whileTap={{ scale: 0.95 }}
       className={`
         px-6 py-2 rounded-lg font-medium transition-colors
-        ${theme.currentTheme === 'minimal'
-          ? 'bg-green-600 hover:bg-green-700 text-white'
-          : 'bg-green-500 hover:bg-green-400 text-black'
-        }
+        ${theme.currentTheme === 'minimal' ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-green-500 hover:bg-green-400 text-black'}
       `}
     >
       Send Another Message
@@ -141,11 +126,8 @@ export default function ProfessionalContactForm() {
     const newErrors = {};
     
     if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email';
     if (!formData.contactType) newErrors.contactType = 'Please select a contact type';
     if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
     if (!formData.message.trim()) newErrors.message = 'Message is required';
@@ -159,7 +141,6 @@ export default function ProfessionalContactForm() {
     e.preventDefault();
     
     if (!validateForm()) {
-      // Scroll to first error
       const firstError = Object.keys(errors)[0];
       const errorElement = formRef.current?.querySelector(`[name="${firstError}"]`);
       errorElement?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -169,30 +150,34 @@ export default function ProfessionalContactForm() {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In real implementation, you would send to your backend or email service
-      // For now, we'll create a mailto link as fallback
-      const mailtoBody = `
-Contact Type: ${CONTACT_TYPES.find(t => t.id === formData.contactType)?.label}
-Company: ${formData.company || 'Not specified'}
-Urgency: ${URGENCY_LEVELS.find(u => u.id === formData.urgency)?.label}
-Budget: ${formData.budget || 'Not specified'}
-Timeline: ${formData.timeline || 'Not specified'}
+      // Prepare template params (must match your EmailJS template variables)
+      const templateParams = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company || 'Not specified',
+        contactType: CONTACT_TYPES.find(t => t.id === formData.contactType)?.label || 'Unknown',
+        urgency: URGENCY_LEVELS.find(u => u.id === formData.urgency)?.label || 'Medium',
+        subject: formData.subject,
+        message: formData.message,
+        budget: formData.budget ? `${formData.budget.replace('-', ' – ')} TND` : 'Not specified',
+        timeline: formData.timeline || 'Not specified',
+        time: new Date().toLocaleString('en-TN', { timeZone: 'Africa/Tunis', dateStyle: 'medium', timeStyle: 'short' }),
+      };
 
-Message:
-${formData.message}
-      `.trim();
-      
-      const mailtoLink = `mailto:liuyuelin.dev@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(mailtoBody)}`;
-      
-      // Open mailto as fallback
-      window.open(mailtoLink);
-      
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
       setIsSubmitted(true);
-    } catch (error) {
-      console.error('Form submission error:', error);
+    }  catch (error) {
+      console.error('EmailJS full error:', error);
+      if (error instanceof EmailJSResponseStatus) {
+        console.log('Status:', error.status);
+        console.log('Response text:', error.text);   
+      }
       setErrors({ submit: 'Failed to send message. Please try again.' });
     } finally {
       setIsSubmitting(false);
@@ -202,11 +187,7 @@ ${formData.message}
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const resetForm = () => {
@@ -238,26 +219,21 @@ ${formData.message}
       transition={{ duration: 0.6 }}
       className={`
         max-w-2xl mx-auto p-6 rounded-xl
-        ${theme.currentTheme === 'minimal'
-          ? 'bg-white border border-gray-200'
-          : 'bg-neutral-900/50 border border-neutral-700'
-        }
+        ${theme.currentTheme === 'minimal' ? 'bg-white border border-gray-200' : 'bg-neutral-900/50 border border-neutral-700'}
       `}
     >
       <div className="text-center mb-8">
-        <h3 className={`text-2xl font-bold mb-2 ${
-          theme.currentTheme === 'minimal' ? 'text-gray-900' : 'text-white'
-        }`}>
+        <h3 className={`text-2xl font-bold mb-2 ${theme.currentTheme === 'minimal' ? 'text-gray-900' : 'text-white'}`}>
           Let's Work Together
         </h3>
-        <p className={`${
-          theme.currentTheme === 'minimal' ? 'text-gray-600' : 'text-neutral-400'
-        }`}>
+        <p className={`${theme.currentTheme === 'minimal' ? 'text-gray-600' : 'text-neutral-400'}`}>
           Tell me about your project and let's discuss how I can help bring your ideas to life.
         </p>
       </div>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+        {/* ... all your existing fields stay almost the same ... */}
+
         {/* Contact Type Selection */}
         <FormField label="What type of collaboration are you interested in?" required theme={theme} error={errors.contactType}>
           <ContactTypeSelector
@@ -270,92 +246,46 @@ ${formData.message}
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField label="Your Name" required theme={theme} error={errors.name}>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="John Doe"
-              className={inputClassName}
-            />
+            <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" className={inputClassName} />
           </FormField>
 
           <FormField label="Email Address" required theme={theme} error={errors.email}>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="john@company.com"
-              className={inputClassName}
-            />
+            <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="john@company.com" className={inputClassName} />
           </FormField>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField label="Company/Organization" theme={theme}>
-            <input
-              type="text"
-              name="company"
-              value={formData.company}
-              onChange={handleInputChange}
-              placeholder="Your Company"
-              className={inputClassName}
-            />
+            <input type="text" name="company" value={formData.company} onChange={handleInputChange} placeholder="Your Company" className={inputClassName} />
           </FormField>
 
           <FormField label="Priority Level" theme={theme}>
-            <select
-              name="urgency"
-              value={formData.urgency}
-              onChange={handleInputChange}
-              className={inputClassName}
-            >
+            <select name="urgency" value={formData.urgency} onChange={handleInputChange} className={inputClassName}>
               {URGENCY_LEVELS.map(level => (
-                <option key={level.id} value={level.id}>
-                  {level.label}
-                </option>
+                <option key={level.id} value={level.id}>{level.label}</option>
               ))}
             </select>
           </FormField>
         </div>
 
-        {/* Project Details */}
         <FormField label="Subject" required theme={theme} error={errors.subject}>
-          <input
-            type="text"
-            name="subject"
-            value={formData.subject}
-            onChange={handleInputChange}
-            placeholder="Brief description of your project"
-            className={inputClassName}
-          />
+          <input type="text" name="subject" value={formData.subject} onChange={handleInputChange} placeholder="Brief description of your project" className={inputClassName} />
         </FormField>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField label="Budget Range (Optional)" theme={theme}>
-            <select
-              name="budget"
-              value={formData.budget}
-              onChange={handleInputChange}
-              className={inputClassName}
-            >
+            <select name="budget" value={formData.budget} onChange={handleInputChange} className={inputClassName}>
               <option value="">Select budget range</option>
-              <option value="under-5k">Under $5,000</option>
-              <option value="5k-10k">$5,000 - $10,000</option>
-              <option value="10k-25k">$10,000 - $25,000</option>
-              <option value="25k-plus">$25,000+</option>
+              <option value="under-5k">Under 5,000 TND</option>
+              <option value="5k-10k">5,000 – 10,000 TND</option>
+              <option value="10k-25k">10,000 – 25,000 TND</option>
+              <option value="25k-plus">25,000+ TND</option>
               <option value="discuss">Let's discuss</option>
             </select>
           </FormField>
 
           <FormField label="Timeline (Optional)" theme={theme}>
-            <select
-              name="timeline"
-              value={formData.timeline}
-              onChange={handleInputChange}
-              className={inputClassName}
-            >
+            <select name="timeline" value={formData.timeline} onChange={handleInputChange} className={inputClassName}>
               <option value="">Select timeline</option>
               <option value="asap">ASAP</option>
               <option value="1-month">Within 1 month</option>
@@ -375,14 +305,11 @@ ${formData.message}
             rows={6}
             className={inputClassName}
           />
-          <div className={`text-xs mt-1 ${
-            theme.currentTheme === 'minimal' ? 'text-gray-500' : 'text-neutral-500'
-          }`}>
+          <div className={`text-xs mt-1 ${theme.currentTheme === 'minimal' ? 'text-gray-500' : 'text-neutral-500'}`}>
             {formData.message.length}/500 characters
           </div>
         </FormField>
 
-        {/* Submit Button */}
         <motion.button
           type="submit"
           disabled={isSubmitting}
@@ -391,9 +318,7 @@ ${formData.message}
           className={`
             w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-200
             ${isSubmitting
-              ? theme.currentTheme === 'minimal'
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-neutral-700 text-neutral-500 cursor-not-allowed'
+              ? theme.currentTheme === 'minimal' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-neutral-700 text-neutral-500 cursor-not-allowed'
               : theme.currentTheme === 'minimal'
                 ? 'bg-gray-900 hover:bg-gray-800 text-white'
                 : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 text-white'
@@ -418,11 +343,7 @@ ${formData.message}
         </motion.button>
 
         {errors.submit && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-red-400 text-center text-sm"
-          >
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-400 text-center text-sm">
             {errors.submit}
           </motion.p>
         )}
