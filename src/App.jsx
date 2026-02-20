@@ -11,17 +11,14 @@ import { ToastProvider } from "./components/ui/common/Toast";
 const Navbar = lazy(() => import("./components/layout/Navbar"));
 const Hero = lazy(() => import("./components/sections/Hero/Hero"));
 const Projects = lazy(() => import("./components/sections/Projects"));
-const Blog = lazy(() => import("./components/sections/Blog"));
 const Experience = lazy(() => import("./components/sections/Experience"));
 const SkillsVisualization = lazy(() => import("./components/sections/Skills"));
-const ReferenceSection = lazy(() => import("./components/sections/References"));
 const PersonalBranding = lazy(() =>
   import("./components/sections/PersonalBranding")
 );
 const GitHubActivity = lazy(() =>
   import("./components/sections/GitHubActivity")
 );
-const Chatbot = lazy(() => import("./components/sections/Chatbot"));
 const Contact = lazy(() => import("./components/sections/Contact"));
 const FloatingNavigation = lazy(() =>
   import("./components/layout/FloatingNavigation")
@@ -139,13 +136,6 @@ function AppContent() {
               <CertificationsSection />
             </section>
           </ErrorBoundary>
-             {/** 
-          <ErrorBoundary sectionName="references section">
-            <section id="references">
-              <ReferenceSection />
-            </section>
-          </ErrorBoundary>
-           **/}
           <ErrorBoundary sectionName="personal branding section">
             <section id="brand">
               <PersonalBranding />
