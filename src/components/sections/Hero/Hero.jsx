@@ -123,7 +123,10 @@ export default function Hero() {
                         >
                             <Button
                                 as="a"
-                                href={cvUrl}
+                                //href={cvUrl}
+                                href="/MariemBenHassen.pdf"
+                                download="Mariem Ben Hassen.pdf"
+                                target="_blank"
                                 variant="primary"
                                 size="lg"
                                 loading={isLoading}
