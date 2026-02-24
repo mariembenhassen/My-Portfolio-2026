@@ -91,6 +91,45 @@ export const PROJECTS = [
       }
     },
     {
+      title: "Savvy Drop",
+      image: projectImages.SavvyDrop, 
+      description: {
+        summary:
+          "A full-stack price tracking platform tailored for Tunisian users, monitoring daily price changes (in TND) across local and international e-commerce sites (Zara TN, Jumia, Mytek, Amazon, etc.). It scrapes products, visualizes trends with interactive Recharts, and sends email alerts on meaningful price drops or increases — built with Next.js, Supabase, Firecrawl, and Resend.",
+        features: [
+          "Daily Automated Scraping: Cron job runs every day to scrape and update product prices using Firecrawl",
+          "Price Trend Visualization: Interactive line charts powered by Recharts showing price history, drops, and increases in TND",
+          "Intelligent Email Alerts: Beautiful, responsive HTML emails sent via Resend when prices drop significantly",
+          "User Dashboard: Secure authenticated area to add/remove products, view tracked items, and explore price history",
+          "TND-Focused Tracking: All prices displayed and compared in Tunisian Dinars with proper formatting",
+          "Supabase Backend: PostgreSQL for users, products, price history + real-time updates and RLS security",
+          "Responsive & Modern UI: Mobile-first design with Tailwind CSS, clean toasts, and intuitive flow",
+          "Robust Error Handling: Graceful fallbacks, logging, and retry logic for reliable scraping and notifications"
+        ]
+      },
+      url: "https://savvy-drop.vercel.app/",
+      technologies: {
+        main: [
+          "Next.js (App Router)",
+          "Supabase (PostgreSQL + Auth)",
+          "Firecrawl (Web Scraping)",
+          "Resend (Transactional Emails)",
+          "Recharts (Interactive Price Charts)",
+          "Tailwind CSS",
+          "Vercel Cron Jobs"
+        ],
+        others: [
+          "TypeScript",
+          "Environment Variables & Security",
+          "Sonner (Toast Notifications)",
+          "Lucide Icons",
+          "Responsive Design (Mobile-first)",
+          "ESLint / Prettier",
+          "Git & Vercel Deployment"
+        ]
+      }
+    },
+    {
       title: "ChronoLit",
       image: projectImages.ChronoLit,
       description: {

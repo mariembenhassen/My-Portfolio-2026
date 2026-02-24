@@ -22,9 +22,11 @@ import careerChatbot from "../assets/projects/careerChatbot.webp";
 import projectManagment from "../assets/projects/Dashboard_projectManagment.png";
 import Estate from "../assets/projects/Estate.png";
 import ChronoLit from  "../assets/projects/chronLit_1.png";
-import Prompet from "../assets/projects/CertifPrompt.png"
+import Prompet from "../assets/projects/CertifPrompt.png";
+import SavvyDrop from "../assets/projects/SavvyDrop.png";
 
 export const projectImages = {
+  SavvyDrop,
   Prompet,
   ChronoLit,
   Estate,
