@@ -245,54 +245,6 @@ export default function SkillsVisualization() {
           />
         ))}
       </div>
-
-      {/* Performance Metrics */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.6 }}
-        className="mt-16 mb-8"
-      >
-        <h3 className={`text-2xl font-bold text-center mb-8 ${theme.currentTheme === 'minimal' ? 'text-gray-800' : 'text-white'
-          }`}>
-          Performance Metrics
-        </h3>
-        <div className="flex justify-center">
-          <LighthouseScoreCard />
-        </div>
-      </motion.div>
-
-      {/* Quick Stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
-        className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
-      >
-        {QUICK_STATS.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className={`
-              text-center p-4 rounded-xl transition-all duration-300
-              ${theme.currentTheme === 'minimal'
-                ? 'bg-white border border-gray-200'
-                : 'bg-neutral-800/30 border border-neutral-700/30'
-              }
-            `}
-          >
-            <div className="text-2xl mb-2">{stat.icon}</div>
-            <div className={`text-2xl font-bold ${theme.currentTheme === 'minimal' ? 'text-gray-800' : 'text-white'
-              }`}>
-              {stat.value}
-            </div>
-            <div className={`text-sm ${theme.currentTheme === 'minimal' ? 'text-gray-600' : 'text-neutral-400'
-              }`}>
-              {stat.label}
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
     </section>
   );
 }
